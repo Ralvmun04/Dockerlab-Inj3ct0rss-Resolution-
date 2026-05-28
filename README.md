@@ -12,19 +12,19 @@ Una vez se despliegue el laboratorio hacemos un escaneo de puestos con la herram
 ```
 sudo nmap 172.17.0.2 -p- --open -sS -sC -sV --min-rate 5000 -vvv -Pn -n
 ```
-**-p-** : Escanea los 65535 puertos existentes.
-**--open** : Muestra los puertos abiertos.
-**-sS** : Realiza un escaneo semi-abierto (TCP SYN Scan).
-**-sC** : Usa scripts para encontrar informacion.
-**-sV** : Que nos informe de la version del servicio que se ejecute.
-**--min-rate 5000** : Que envie 5000 paquetes por segundo (Escaneo rapido pero ruidoso).
-**-vvv** : Triple verbose para ver la informacion en tiempo real.
-**-Pn** : Omite el descubrimiento de hosts.
-**-n** : Que desactive la resolucion DNS inversa.
+**-p-** : Escanea los 65535 puertos existentes. <br>
+**--open** : Muestra los puertos abiertos. <br>
+**-sS** : Realiza un escaneo semi-abierto (TCP SYN Scan). <br>
+**-sC** : Usa scripts para encontrar informacion. <br>
+**-sV** : Que nos informe de la version del servicio que se ejecute. <br>
+**--min-rate 5000** : Que envie 5000 paquetes por segundo (Escaneo rapido pero ruidoso). <br>
+**-vvv** : Triple verbose para ver la informacion en tiempo real. <br>
+**-Pn** : Omite el descubrimiento de hosts. <br>
+**-n** : Que desactive la resolucion DNS inversa. <br>
 
 <img width="951" height="437" alt="Captura desde 2026-05-28 22-39-01" src="https://github.com/user-attachments/assets/c6778302-3d99-4903-a183-aab2a9eaf36a" />
 
-Como podemos ver tenemos abierto el **puerto 80** (correspondiente a http) y el **puerto 22** (correspondiente a ssh).
+Como podemos ver tenemos abierto el **puerto 80** (correspondiente a http) y el **puerto 22** (correspondiente a ssh). <br>
 
 Al buscar la pagina web nos encontramos con una bienvenida y un CTF basado en la vulnerabilidad **SQLInjection**, pasamos la pagina por gobuster para buscar directorios ocultos pero no encontramos nada interesante:
 
@@ -38,17 +38,17 @@ y...
 
 <img width="1257" height="238" alt="Captura desde 2026-05-28 22-43-30" src="https://github.com/user-attachments/assets/5d8c0372-371b-4689-8565-02430a5dedd7" />
 
-**Bingo!!!**
-Logramos entrar como el usuario **admin** gracias a la vulnerabilidad **SQLInjection**!!
+**Bingo!!!** <br>
+Logramos entrar como el usuario **admin** gracias a la vulnerabilidad **SQLInjection**!! <br>
 al descubrir que este login es **vulnerable** al SQLInjection lo pasamos por **sqlmap** con las siguientes opciones:
 ```
 sqlmap -u http://172.17.0.2/login.php --forms --dbs --batch --dump
 ```
-**-u** : Indicamos la URL a atacar.
-**--forms** : Le indicamos que esta frente a un formulario html.
-**--dbs** : Enumere las bases de datos disponibles.
-**--batch** : Ejecuta en modo automatico.
-**--dump** : Escribe en pantalla los datos de las bases de datos que hayas encontrado.
+**-u** : Indicamos la URL a atacar. <br>
+**--forms** : Le indicamos que esta frente a un formulario html. <br>
+**--dbs** : Enumere las bases de datos disponibles. <br>
+**--batch** : Ejecuta en modo automatico. <br>
+**--dump** : Escribe en pantalla los datos de las bases de datos que hayas encontrado. <br>
 
 Vemos que la herramienta tarda en sacar los datos, ya que va de letra en letra, esto es porque esta haciendo un ataque de Inyeccion SQL basado en **tiempo**, en el que le pide a la base de datos, de letra en letra, si esa es la suguiente letra correcta, si lo es, que espere, y si no, que lo rechace, esperamos un rato y **tenemos los resultados**:
 
@@ -62,11 +62,11 @@ Un **secret.zip** que, al descargar, vemos que nos pide una contrasena, probamos
 
 <img width="946" height="115" alt="Captura desde 2026-05-28 22-48-52" src="https://github.com/user-attachments/assets/fa68b51c-914b-48be-bf41-6e8bb431c946" />
 
-**Nos encuentra la contrasena**, dentro del .zip encontramos un archivo llamado **confidencial.txt**:
+**Nos encuentra la contrasena**, dentro del .zip encontramos un archivo llamado **confidencial.txt**: <br>
 
->You have to change your password ralf, I have told you many times, log into your account and I will change your password.
->Your new credentials are:
->ralf:supersecurepassword
+>You have to change your password ralf, I have told you many times, log into your account and I will change your password. <br>
+>Your new credentials are: <br>
+>ralf:supersecurepassword <br>
 
 Usamos estas credenciales en el puerto ssh y **tenemos acceso**, al buscar una forma de escalar privilegios, encontramos una opcion con **sudo -l**:
 
@@ -92,6 +92,6 @@ Nos funciona por lo tanto nos guardamos el **id_rsa** en un archivo llamado de l
 
 <img width="947" height="496" alt="Captura desde 2026-05-28 23-03-21" src="https://github.com/user-attachments/assets/f993eac0-6857-4d19-b94c-e825048c3aee" />
 
-Finalmente en root encontramos la ultima **flag** y damos el laboratorio por **finalizado**.
+Finalmente en root encontramos la ultima **flag** y damos el laboratorio por **finalizado**. <br>
 
 En este laboratorio hemos aprendido lo peligroso que es una mala configuracion de algo tan simple como un formulario de Login, en el que el input del usuario puede llegar a conseguir el acceso a nuestras bases de datos, dejando al descubierto las partes mas vulnerables de nuestro sistema.
