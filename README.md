@@ -1,16 +1,16 @@
 <img width="947" height="496" alt="Captura desde 2026-05-28 23-55-38" src="https://github.com/user-attachments/assets/5df00825-11c7-434b-97fc-11244ece81eb" />
 
 
-Comenzamos el laboratorio iniciando el laboratorio de **Dockerlabs** con el siguiente comando:
+Comenzamos iniciando el laboratorio de **Dockerlabs** con el siguiente comando:
 ```
 sudo bash auto_deploy.sh inj3ct0rss.tar
 ```
 
 <img width="951" height="437" alt="Captura desde 2026-05-28 22-37-21" src="https://github.com/user-attachments/assets/9eb50448-0497-416b-806d-35f4cc5ea115" />
 
-Una vez se despliegue el laboratorio hacemos un escaneo de puestos con la herramienta nmap, con las siguientes opciones:
+Una vez se despliegue, hacemos un escaneo de puertos con la herramienta nmap, especificando lo siguiente:
 ```
-sudo nmap 172.17.0.2 -p- --open -sS -sC -sV --min-rate 5000 -vvv -Pn -n
+sudo nmap -p- --open -sS -sC -sV --min-rate 5000 -vvv -Pn -n 172.17.0.2
 ```
 **-p-** : Escanea los 65535 puertos existentes. <br>
 **--open** : Muestra los puertos abiertos. <br>
